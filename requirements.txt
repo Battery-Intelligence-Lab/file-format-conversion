@@ -1,3 +1,5 @@
+pyyaml>5.0
 fastparquet>=2022.11
+numpy>=1.20
 pandas>=1.4
 tqdm>=4.0

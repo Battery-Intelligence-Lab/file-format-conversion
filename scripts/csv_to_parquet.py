@@ -44,6 +44,16 @@ parser: ArgumentParser = ArgumentParser(
     description=__doc__,  # The docstring of this file
     formatter_class=RawDescriptionHelpFormatter,
 )
+
+parser.add_argument(
+    '-dt', '--datetimes',
+    type=str, help="Column in the CSVs to parse as datetimes."
+)
+parser.add_argument(
+    '-i', '--index',
+    type=str, help="Column in the CSVs to use as an index."
+)
+
 parser.add_argument(
     'start_directory', metavar="START_DIRECTORY", nargs='?',
     type=Path, default=Path("."),
@@ -51,12 +61,12 @@ parser.add_argument(
          "By default searches the current working directory."
 )
 parser.add_argument(
-    '-f', '--force', action='store_true', default=False,
+    '-o', '--overwrite', action='store_true', default=False,
     help="Whether to overwrite any existing Parquet files.\n"
          "By default will skip subdirectories rather than overwrite."
 )
 parser.add_argument(
-    '-p', '--high-precision', action='store_true', default=False,
+    '-hp', '--high-precision', action='store_true', default=False,
     help="Whether to store numeric data in the file as 64-bit floats and ints.\n"
          "By default, assumes that the CSVs are only accurate to 32 bit (~7dp).\n"
          "If set, the Parquet files will be about twice as large."
@@ -71,7 +81,7 @@ parser_pattern.add_argument(
     '-c', '--csv-pattern',
     type=str, default=GLOB_CSV_PATTERN,
     help="Regular expression pattern to match for CSV filenames.\n"
-         f"By default '{GLOB_CSV_PATTERN}'; could change to 'PSTc*' or similar."
+         f"By default '{GLOB_CSV_PATTERN}'; could change to 'PSTc*.csv' or similar."
 )
 parser_pattern.add_argument(
     '-d', '--directory-pattern',
@@ -115,6 +125,9 @@ num_files_skipped: int = 0
 # We'll also store any directories we found that weren't valid
 empty_directories: List[str] = []
 
+# TQDM doesn't like printing errors within loops so we do this
+
+
 # We use glob to get everything in the current directory matching our pattern
 # then ignore everything that isn't a directory itself (or hidden!)
 campaign_directories: List[Path] = [
@@ -144,7 +157,7 @@ for campaign_directory in campaign_directories_progress:
         )
         
         # Don't overwrite unless we're ordered to!
-        if experiment_directory.with_suffix('.parquet').exists() and not arguments.force:
+        if experiment_directory.with_suffix('.parquet').exists() and not arguments.overwrite:
             num_files_skipped += 1
             continue
 
@@ -168,13 +181,22 @@ for campaign_directory in campaign_directories_progress:
             original_sizes += csv_filename.stat().st_size
 
         # Load all the dataframes we found
-        dataframes: List[DataFrame] = [
-            pandas.read_csv(
-                csv_filename, 
-                parse_dates=["Date_Time"],  # This column is a time
-                index_col='Data_Point'  # And this is the index column
-            ) for csv_filename in csv_filenames
-        ]        
+        try:
+            dataframes: List[DataFrame] = [
+                pandas.read_csv(
+                    csv_filename, 
+                    parse_dates=[arguments.datetimes] if arguments.datetimes else False,
+                    infer_datetime_format=True,
+                    index_col=arguments.index if arguments.index else None
+                ) for csv_filename in csv_filenames
+            ]
+        except Exception as error:
+            # If it didn't work, provide a nicer error
+            raise Exception(
+                f"Failed to read '{csv_filename}'." +
+                (f" Is index column '{arguments.index}' correct?" if arguments.index else '') +
+                (f" Is datetime column '{arguments.datetimes}' correct?" if arguments.datetimes else '')
+            )
 
         # Concatenate all the dataframes we found into one
         dataframe: DataFrame = pandas.concat(dataframes)
@@ -224,7 +246,7 @@ if num_files_converted:
         f"{num_files_converted} converted file(s) are smaller " 
         f"by a factor of {original_sizes / parquet_sizes}"
     )
-elif not arguments.force and num_files_skipped:
+elif not arguments.overwrite and num_files_skipped:
     print(
         f"No files converted, but {num_files_skipped} pre-existing Parquet file(s) skipped"
     )
