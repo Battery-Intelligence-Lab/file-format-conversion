@@ -14,6 +14,7 @@ import pandas  # Everyone uses Pandas as a full import so I will for consistency
 
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from pathlib import Path
+from platform import system
 from typing import List
 from yaml import safe_load
 from numpy.typing import NDArray
@@ -172,3 +173,7 @@ else:
     print(
         "No files converted."
     )
+
+# If we're on Windows, the window may close immediately, so add a confirmation step.
+if system() == "Windows":
+    input(prompt='Hit enter to continue...')

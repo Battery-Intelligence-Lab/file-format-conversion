@@ -28,6 +28,7 @@ import pandas  # Everyone uses Pandas as a full import so I will for consistency
 
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from pathlib import Path
+from platform import system
 from typing import List
 from pandas import DataFrame  # Except for this, to make the type hinting prettier
 from tqdm import tqdm
@@ -157,7 +158,10 @@ for campaign_directory in campaign_directories_progress:
         )
         
         # Don't overwrite unless we're ordered to!
-        if experiment_directory.with_suffix('.parquet').exists() and not arguments.overwrite:
+        parquet_filename: Path = experiment_directory.with_suffix(
+            experiment_directory.suffix + '.parquet'
+            )
+        if parquet_filename.exists() and not arguments.overwrite:
             num_files_skipped += 1
             continue
 
@@ -218,7 +222,6 @@ for campaign_directory in campaign_directories_progress:
         )
 
         # Save the dataframe back out to a Parquet file
-        parquet_filename: Path = experiment_directory.with_suffix('.parquet')
         dataframe.to_parquet(
             parquet_filename, 
             index=False,  # The index is just row number so we don't need to duplicate it
@@ -259,3 +262,7 @@ else:
 if arguments.verbose:
     print('')
     print('\n'.join(empty_directories))
+
+# If we're on Windows, the window may close immediately, so add a confirmation step.
+if system() == "Windows":
+    input(prompt='Hit enter to continue...')
