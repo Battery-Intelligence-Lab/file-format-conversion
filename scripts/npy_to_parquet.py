@@ -173,7 +173,3 @@ else:
     print(
         "No files converted."
     )
-
-# If we're on Windows, the window may close immediately, so add a confirmation step.
-if system() == "Windows":
-    input(prompt='Hit enter to continue...')

@@ -262,7 +262,3 @@ else:
 if arguments.verbose:
     print('')
     print('\n'.join(empty_directories))
-
-# If we're on Windows, the window may close immediately, so add a confirmation step.
-if system() == "Windows":
-    input(prompt='Hit enter to continue...')

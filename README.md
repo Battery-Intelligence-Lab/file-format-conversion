@@ -12,6 +12,11 @@ git clone git@github.com:Battery-Intelligence-Lab/file-format-conversion.git
 pip install file-format-conversion/
 ```
 
+## Windows
+If you're running through Powershell, and run into problems with Python popping up in a window and then closing *immediately* after finishing, try running:
+```
+$env:PATHEXT += ';.PY'
+```
 
 # Usage
 
