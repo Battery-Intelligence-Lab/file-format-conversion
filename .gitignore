@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Matlab temporary files
+*.asv
+
 # C extensions
 *.so
 
