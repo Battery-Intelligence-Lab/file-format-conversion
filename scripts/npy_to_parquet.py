@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-A Python script to convert the data from npy files to a Parquet file.
+A Python script to convert time series data from npy files to a Parquet file.
 
 It assumes the npy files are all stored in a single directory, and match a 
 specific format, or one provided by the user in a formatting file.

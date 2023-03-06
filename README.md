@@ -1,10 +1,16 @@
 # file-format-conversion
 A set of scripts to convert between common battery data file formats.
 
-This repository will contain Python scripts and instructions for converting from CSV and NPY files to the Parquet file format. More information about Parquet can be found here: https://www.databricks.com/glossary/what-is-parquet
+This repository contains some Python and Matlab scripts for converting from CSV, NPY and MAT files to the Parquet file format. More information about Parquet can be found here: https://www.databricks.com/glossary/what-is-parquet
+
+See below for instructions for 1) Matlab and 2) Python users.
+
+# 1) Installation for Matlab users
+
+Clone the repository or just download the csv_to_parquet.m or mat_to_parquet.m function as required. Add the function to your Matlab path and open to read the documentation and possible options. Navigate to the main folder containing your folders and subfolders, or define the `options.StartDirectory`, before running the code.
 
 
-# Installation
+# 2) Installation for Python users
 
 Clone the repository, and install it through pip as:
 ```

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-A Python script to convert the ULB data from CSV files to a Parquet file.
+A Python script to convert time series data from CSV files to a Parquet file.
 
 It assumes CSV files are stored as "Campaigns", where a directory contains
 multiple campaigns, each of which contains one subdirectory per experiment,
