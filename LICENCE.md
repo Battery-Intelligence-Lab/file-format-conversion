@@ -1,6 +1,7 @@
 MIT License
 
-Copyright (c) 2023 Sam Mangham
+Copyright  (c) 2023, The Chancellor, Masters and Scholars of the University 
+of Oxford, and the Developers. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

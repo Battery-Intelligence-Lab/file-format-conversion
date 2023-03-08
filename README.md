@@ -1,13 +1,21 @@
 # file-format-conversion
-A set of scripts to convert between common battery data file formats.
+A set of scripts to convert between common file formats for file formats. For example, we use them to convert time series data for batteries from CSV to Parquet.
 
-This repository contains some Python and Matlab scripts for converting from CSV, NPY and MAT files to the Parquet file format. More information about Parquet can be found here: https://www.databricks.com/glossary/what-is-parquet
+Thus repository contains some Python and Matlab scripts for converting from CSV, NPY and MAT files to the Parquet file format. More information about Parquet can be found here: https://www.databricks.com/glossary/what-is-parquet
 
 See below for instructions for 1) Matlab and 2) Python users.
 
 # 1) Installation for Matlab users
 
 Clone the repository or just download the csv_to_parquet.m or mat_to_parquet.m function as required. Add the function to your Matlab path and open to read the documentation and possible options. Navigate to the main folder containing your folders and subfolders, or define the `options.StartDirectory`, before running the code.
+
+Tip: When loading an existing Parquet file into Matlab, if the Date/Time column shows as a numeric value rather than a `datetime`, try converting the column using:
+
+```
+x1 = parquetread('FILENAME.parquet');
+x1.Time = x1.Time/1e9; % nanoseconds to seconds
+x1.Time = datetime(x1.Time,'ConvertFrom','posixtime');
+```
 
 
 # 2) Installation for Python users
