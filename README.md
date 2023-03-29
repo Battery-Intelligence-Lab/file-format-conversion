@@ -1,7 +1,7 @@
 # file-format-conversion
-A set of scripts to convert between common file formats for file formats. For example, we use them to convert time series data for batteries from CSV to Parquet.
+A set of scripts to convert between common file formats for data. For example, we use them to convert time series data for batteries from CSV to Parquet.
 
-Thus repository contains some Python and Matlab scripts for converting from CSV, NPY and MAT files to the Parquet file format. More information about Parquet can be found here: https://www.databricks.com/glossary/what-is-parquet
+This repository contains some Python and Matlab scripts for converting from CSV, NPY and MAT files to the Parquet file format. More information about Parquet can be found here: https://www.databricks.com/glossary/what-is-parquet
 
 See below for instructions for 1) Matlab and 2) Python users.
 
